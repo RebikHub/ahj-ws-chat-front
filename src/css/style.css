@@ -8,3 +8,108 @@ body {
     position: relative;
     font-family:'Courier New', Courier, monospace;
 }
+
+#container {
+    display: contents;
+}
+
+.nickname {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 15px;
+    width: 350px;
+    height: 180px;
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.title-nickname {
+    font-weight: normal;
+    margin: auto;
+    margin-bottom: 0px;
+}
+
+.input-nickname {
+    width: 80%;
+    height: 25px;
+    padding-left: 3px;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+.btn-nickname {
+    width: 50%;
+    margin: auto;
+    margin-top: 15px;
+    border-radius: inherit;
+    height: 25px;
+    background-color: inherit;
+    border: 1px solid black;
+}
+
+.chat {
+    margin: auto;
+    margin-top: 15px;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+
+}
+
+.nicknames-in-chat {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    border: 1px solid black;
+    width: 15%;
+    border-radius: 10px;
+}
+
+.nicknames-in-chat > span {
+    display: flex;
+    margin: 5px 0 5px 10px;
+    line-height: 25px;
+}
+
+.nicknames-in-chat > span > img {
+    width: 24px;
+    height: 24px;
+    border: 1px solid black;
+    border-radius: 24px;
+}
+
+.nicknames-in-chat > span > p {
+    margin-left: 5px;
+}
+
+.chat-room {
+    width: 55%;
+    height: 500px;
+    border: 1px solid black;
+    border-radius: 15px;
+}
+
+.chat-message {
+    width: 96%;
+    height: 85%;
+    padding: 1% 2% 0 2%;
+}
+
+.input-chat-message {
+    margin: auto;
+    display: flex;
+    width: 90%;
+    height: 10%;
+    border-radius: inherit;
+    border: 1px solid black;
+    padding-left: 5px;
+    padding-top: 3px;
+    resize: none;
+}
+
+.none {
+    display: none;
+}
+
