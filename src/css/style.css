@@ -1,0 +1,10 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    display: flex;
+    position: relative;
+    font-family:'Courier New', Courier, monospace;
+}
