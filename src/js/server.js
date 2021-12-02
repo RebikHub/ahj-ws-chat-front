@@ -19,7 +19,11 @@ export default class Server {
     return result;
   }
 
-  remove(id) {
-    return fetch(`${this.url}/${id}`, { method: 'DELETE' });
+  async remove(id) {
+    const response = await fetch(`${this.url}/${id}`, {
+      method: 'DELETE',
+    });
+    const result = await response.text();
+    return result;
   }
 }

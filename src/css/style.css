@@ -118,6 +118,15 @@ body {
     text-align: end;
 }
 
+.close-chat {
+    width: 32px;
+    height: 32px;
+    border-radius: 32px;
+    border: 1px solid black;
+    background-image: url(../img/cross.png);
+    background-size: cover;
+}
+
 .none {
     display: none;
 }

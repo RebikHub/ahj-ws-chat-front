@@ -12,10 +12,12 @@ export default class Chat {
     this.chatMessage = document.querySelector('.chat-message');
     this.usedNickname = document.querySelector('.used-nickname');
     this.btnUsedNickname = document.querySelector('.btn-used-nickname');
+    this.closeChat = document.querySelector('.close-chat');
     this.users = null;
     this.inputNameText = null;
     this.inputTextMessage = null;
     this.messageTime = null;
+    this.id = null;
   }
 
   events() {
@@ -25,6 +27,7 @@ export default class Chat {
     this.btnUsedNameCloseClick();
     this.inputMessageToChat();
     this.webSocket();
+    this.close();
   }
 
   webSocket() {
@@ -35,10 +38,20 @@ export default class Chat {
     });
 
     this.ws.addEventListener('message', (evt) => {
-      console.log(evt.data);
+      const data = JSON.parse(evt.data);
+      console.log(data);
+      console.log(this.users);
+      if (this.users !== null) {
+        this.users.forEach((elem) => {
+          if (elem.id === data.id && this.id !== data.id) {
+            this.addMessages(data.text, elem.nickname);
+          }
+        });
+      }
     });
 
     this.ws.addEventListener('close', (evt) => {
+      this.ws.send('local');
       console.log('connection closed', evt);
     });
 
@@ -63,6 +76,7 @@ export default class Chat {
     this.inputMessage.addEventListener('keyup', (ev) => {
       if (ev.key === 'Enter') {
         this.addMessages(this.inputTextMessage);
+        this.sendMessage(this.inputTextMessage);
         this.inputTextMessage = null;
         this.inputMessage.value = null;
         this.inputMessage.blur();
@@ -83,6 +97,14 @@ export default class Chat {
       span.classList.add('message');
     }
     this.chatMessage.appendChild(span);
+  }
+
+  sendMessage(message) {
+    const data = {
+      id: this.id,
+      text: message.trim(),
+    };
+    this.ws.send(JSON.stringify(data));
   }
 
   static messageDate() {
@@ -112,6 +134,11 @@ export default class Chat {
       const user = await this.server.add(nickname);
       if (user !== 'ошибка') {
         this.users = await this.server.load();
+        this.users.forEach((elem) => {
+          if (elem.nickname === nickname) {
+            this.id = elem.id;
+          }
+        });
         this.renderChat(this.users);
       } else {
         this.nickname.classList.add('none');
@@ -125,6 +152,7 @@ export default class Chat {
   renderChat(users) {
     this.nickname.classList.add('none');
     this.chat.classList.remove('none');
+    this.inputNickname.value = null;
     users.forEach((elem) => {
       const span = document.createElement('span');
       const img = document.createElement('img');
@@ -142,6 +170,16 @@ export default class Chat {
     });
   }
 
+  closeChatRoom() {
+    this.nickname.classList.remove('none');
+    this.chat.classList.add('none');
+    this.server.remove(this.id);
+    this.nicknamesInChat.textContent = null;
+    this.chatMessage.textContent = null;
+    this.id = null;
+    this.users = null;
+  }
+
   btnNameClick() {
     this.btnNickname.addEventListener('click', () => {
       this.connectToChat(this.inputNameText);
@@ -152,6 +190,12 @@ export default class Chat {
     this.btnUsedNickname.addEventListener('click', () => {
       this.nickname.classList.remove('none');
       this.usedNickname.classList.add('none');
+    });
+  }
+
+  close() {
+    this.closeChat.addEventListener('click', () => {
+      this.closeChatRoom();
     });
   }
 }
