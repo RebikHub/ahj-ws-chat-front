@@ -1,23 +1,21 @@
 export default class Server {
   constructor() {
-    this.url = 'http://localhost:3333/users';
-    this.contentTypeHeader = { 'Content-Type': 'application/json' };
+    this.url = 'http://10.4.4.10:3333/users';
   }
 
   async add(nickname) {
     const response = await fetch(this.url, {
-      body: JSON.stringify(nickname),
+      body: nickname,
       method: 'POST',
-      headers: this.contentTypeHeader,
     });
-    const result = await response.json();
-    return console.log(`Response server: ${result}`);
+    const result = await response.text();
+    console.log(`Response server: ${result}`);
+    return result;
   }
 
   async load() {
     const response = await fetch(this.url);
     const result = await response.json();
-    console.log(`Response server: ${result}`);
     return result;
   }
 

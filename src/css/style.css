@@ -13,7 +13,7 @@ body {
     display: contents;
 }
 
-.nickname {
+.nickname, .used-nickname {
     display: flex;
     flex-direction: column;
     border: 1px solid black;
@@ -25,10 +25,11 @@ body {
     margin-right: auto;
 }
 
-.title-nickname {
+.title-nickname, .title-used-nickname {
     font-weight: normal;
     margin: auto;
     margin-bottom: 0px;
+    text-align: center;
 }
 
 .input-nickname {
@@ -39,7 +40,7 @@ body {
     margin-bottom: 20px;
 }
 
-.btn-nickname {
+.btn-nickname, .btn-used-nickname {
     width: 50%;
     margin: auto;
     margin-top: 15px;
@@ -63,7 +64,7 @@ body {
     flex-direction: column;
     height: fit-content;
     border: 1px solid black;
-    width: 15%;
+    width: 20%;
     border-radius: 10px;
 }
 
@@ -92,6 +93,8 @@ body {
 }
 
 .chat-message {
+    display: flex;
+    flex-direction: column;
     width: 96%;
     height: 85%;
     padding: 1% 2% 0 2%;
@@ -107,6 +110,12 @@ body {
     padding-left: 5px;
     padding-top: 3px;
     resize: none;
+}
+
+.message {
+    margin-top: 10px;
+    overflow-wrap: break-word;
+    text-align: end;
 }
 
 .none {
