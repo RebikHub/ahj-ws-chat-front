@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 export default class Chat {
   constructor(server, ws) {
     this.server = server;
@@ -39,23 +40,19 @@ export default class Chat {
 
     this.ws.addEventListener('message', (evt) => {
       const data = JSON.parse(evt.data);
-      let arr = false;
       console.log(data);
-      if (data !== null && data.nickname !== null && this.users !== null) {
-        this.users.forEach((elem) => {
-          if (data.id === elem.id) {
-            arr = true;
-          }
-        });
-        if (!arr) {
-          this.addUser(data);
-        }
-      } else if (this.users !== null) {
+
+      if (data !== null && this.users !== null) {
         this.users.forEach((elem) => {
           if (elem.id === data.id && this.id !== data.id) {
             this.addMessages(data.text, elem.nickname);
           }
         });
+        if (data.status !== null && data.status === 'add') {
+          this.addUser(data);
+        } else if (data.status === 'remove') {
+          this.removeUser(data);
+        }
       }
     });
 
@@ -149,6 +146,7 @@ export default class Chat {
             this.ws.send(JSON.stringify({
               nickname: nick,
               id: this.id,
+              status: 'add',
             }));
           }
         });
@@ -173,7 +171,6 @@ export default class Chat {
       if (elem.nickname === this.inputNameText) {
         p.textContent = 'You';
         p.style.color = 'red';
-        this.inputNameText = null;
       } else {
         p.textContent = elem.nickname;
       }
@@ -183,23 +180,39 @@ export default class Chat {
     });
   }
 
-  addUser(user) {
-    this.users.push(user);
+  async addUser(user) {
+    this.users = await this.server.load();
     const span = document.createElement('span');
     const img = document.createElement('img');
     const p = document.createElement('p');
     p.textContent = user.nickname;
     span.appendChild(img);
     span.appendChild(p);
-    this.nicknamesInChat.appendChild(span);
+    this.nicknamesInChat.insertBefore(span, this.nicknamesInChat.children[this.nicknamesInChat.children.length - 1]);
+  }
+
+  async removeUser(user) {
+    this.users = await this.server.load();
+    console.log(user);
+    for (const elem of this.nicknamesInChat.children) {
+      if (elem.querySelector('p').textContent === user.nickname) {
+        elem.remove();
+      }
+    }
   }
 
   closeChatRoom() {
     this.nickname.classList.remove('none');
     this.chat.classList.add('none');
     this.server.remove(this.id);
+    this.ws.send(JSON.stringify({
+      nickname: this.inputNameText,
+      id: this.id,
+      status: 'remove',
+    }));
     this.nicknamesInChat.textContent = null;
     this.chatMessage.textContent = null;
+    this.inputNameText = null;
     this.id = null;
     this.users = null;
   }
