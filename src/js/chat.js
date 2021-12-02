@@ -33,15 +33,24 @@ export default class Chat {
   webSocket() {
     this.ws.addEventListener('open', () => {
       console.log('connected');
-      const data = JSON.stringify('hello');
+      const data = JSON.stringify(this.id);
       this.ws.send(data);
     });
 
     this.ws.addEventListener('message', (evt) => {
       const data = JSON.parse(evt.data);
+      let arr = false;
       console.log(data);
-      console.log(this.users);
-      if (this.users !== null) {
+      if (data !== null && data.nickname !== null && this.users !== null) {
+        this.users.forEach((elem) => {
+          if (data.id === elem.id) {
+            arr = true;
+          }
+        });
+        if (!arr) {
+          this.addUser(data);
+        }
+      } else if (this.users !== null) {
         this.users.forEach((elem) => {
           if (elem.id === data.id && this.id !== data.id) {
             this.addMessages(data.text, elem.nickname);
@@ -129,14 +138,18 @@ export default class Chat {
     return `${hours}:${minute} ${day}.${month}.${String(year).slice(2)}`;
   }
 
-  async connectToChat(nickname) {
-    if (nickname !== null) {
-      const user = await this.server.add(nickname);
+  async connectToChat(nick) {
+    if (nick !== null) {
+      const user = await this.server.add(nick);
       if (user !== 'ошибка') {
         this.users = await this.server.load();
         this.users.forEach((elem) => {
-          if (elem.nickname === nickname) {
+          if (elem.nickname === nick) {
             this.id = elem.id;
+            this.ws.send(JSON.stringify({
+              nickname: nick,
+              id: this.id,
+            }));
           }
         });
         this.renderChat(this.users);
@@ -168,6 +181,17 @@ export default class Chat {
       span.appendChild(p);
       this.nicknamesInChat.appendChild(span);
     });
+  }
+
+  addUser(user) {
+    this.users.push(user);
+    const span = document.createElement('span');
+    const img = document.createElement('img');
+    const p = document.createElement('p');
+    p.textContent = user.nickname;
+    span.appendChild(img);
+    span.appendChild(p);
+    this.nicknamesInChat.appendChild(span);
   }
 
   closeChatRoom() {
