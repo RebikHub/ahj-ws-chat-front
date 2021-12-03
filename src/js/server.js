@@ -1,6 +1,6 @@
 export default class Server {
   constructor() {
-    this.url = 'http://10.4.4.10:3333/users';
+    this.url = 'https://ahj-ws-chat-server.herokuapp.com/users';
   }
 
   async add(nickname) {

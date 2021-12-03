@@ -111,7 +111,6 @@ export default class Chat {
         span.classList.add('message');
       }
       this.chatMessage.appendChild(span);
-      // this.chatMessage.scrollIntoView(false);
       this.chatMessage.scrollTop = this.chatMessage.scrollHeight;
     }
   }
