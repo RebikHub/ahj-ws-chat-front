@@ -3,6 +3,12 @@
     margin: 0px;
 }
 
+@media (max-width: 500px) {
+    .chat {
+        width: 100%;
+    }
+}
+
 body {
     display: flex;
     position: relative;
