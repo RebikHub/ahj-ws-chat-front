@@ -33,22 +33,20 @@ export default class Chat {
 
   webSocket() {
     this.ws.addEventListener('open', () => {
-      console.log('connected');
       const data = JSON.stringify(this.id);
       this.ws.send(data);
     });
 
     this.ws.addEventListener('message', (evt) => {
       const data = JSON.parse(evt.data);
-      console.log(data);
 
-      if (data !== null && this.users !== null) {
+      if (data !== null && this.users !== null && data.status === null) {
         this.users.forEach((elem) => {
           if (elem.id === data.id && this.id !== data.id) {
             this.addMessages(data.text, elem.nickname);
           }
         });
-        if (data.status !== null && data.status === 'add') {
+        if (data.status !== null && data.status === 'add' && data.nickname !== this.inputNameText) {
           this.addUser(data);
         } else if (data.status === 'remove') {
           this.removeUser(data);
@@ -57,7 +55,6 @@ export default class Chat {
     });
 
     this.ws.addEventListener('close', (evt) => {
-      this.ws.send('local');
       console.log('connection closed', evt);
     });
 
@@ -193,7 +190,6 @@ export default class Chat {
 
   async removeUser(user) {
     this.users = await this.server.load();
-    console.log(user);
     for (const elem of this.nicknamesInChat.children) {
       if (elem.querySelector('p').textContent === user.nickname) {
         elem.remove();
