@@ -40,9 +40,9 @@ export default class Chat {
     this.ws.addEventListener('message', (evt) => {
       const data = JSON.parse(evt.data);
 
-      if (data !== null && this.users !== null && data.status === null) {
+      if (data !== null && this.users !== null) {
         this.users.forEach((elem) => {
-          if (elem.id === data.id && this.id !== data.id) {
+          if (elem.id === data.id && this.id !== data.id && data.status === null) {
             this.addMessages(data.text, elem.nickname);
           }
         });
