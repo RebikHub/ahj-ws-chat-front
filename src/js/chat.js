@@ -23,12 +23,23 @@ export default class Chat {
 
   events() {
     this.inputName();
+    this.keyNameEnter();
     this.btnNameClick();
     this.inputText();
     this.btnUsedNameCloseClick();
     this.inputMessageToChat();
     this.webSocket();
     this.close();
+    window.onbeforeunload = () => this.outBrowser();
+  }
+
+  outBrowser() {
+    this.server.remove(this.id);
+    this.ws.send(JSON.stringify({
+      nickname: this.inputNameText,
+      id: this.id,
+      status: 'remove',
+    }));
   }
 
   webSocket() {
@@ -39,10 +50,9 @@ export default class Chat {
 
     this.ws.addEventListener('message', (evt) => {
       const data = JSON.parse(evt.data);
-
       if (data !== null && this.users !== null) {
         this.users.forEach((elem) => {
-          if (elem.id === data.id && this.id !== data.id && data.status === null) {
+          if (elem.id === data.id && this.id !== data.id && data.text) {
             this.addMessages(data.text, elem.nickname);
           }
         });
@@ -59,7 +69,7 @@ export default class Chat {
     });
 
     this.ws.addEventListener('error', () => {
-      console.log('error');
+      console.log('error web socket');
     });
   }
 
@@ -216,6 +226,14 @@ export default class Chat {
   btnNameClick() {
     this.btnNickname.addEventListener('click', () => {
       this.connectToChat(this.inputNameText);
+    });
+  }
+
+  keyNameEnter() {
+    this.inputNickname.addEventListener('keyup', (ev) => {
+      if (ev.key === 'Enter') {
+        this.connectToChat(this.inputNameText);
+      }
     });
   }
 

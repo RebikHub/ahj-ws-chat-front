@@ -9,7 +9,6 @@ export default class Server {
       method: 'POST',
     });
     const result = await response.text();
-    console.log(`Response server: ${result}`);
     return result;
   }
 
