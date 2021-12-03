@@ -98,18 +98,22 @@ export default class Chat {
   }
 
   addMessages(message, nick = 'You') {
-    const span = document.createElement('span');
-    const titleDate = document.createElement('h6');
-    const text = document.createElement('p');
-    titleDate.textContent = `${nick}, ${Chat.messageDate()}`;
-    text.textContent = message;
-    span.appendChild(titleDate);
-    span.appendChild(text);
-    if (nick === 'You') {
-      titleDate.style.color = 'red';
-      span.classList.add('message');
+    if (message && message !== '') {
+      const span = document.createElement('span');
+      const titleDate = document.createElement('h6');
+      const text = document.createElement('p');
+      titleDate.textContent = `${nick}, ${Chat.messageDate()}`;
+      text.textContent = message;
+      span.appendChild(titleDate);
+      span.appendChild(text);
+      if (nick === 'You') {
+        titleDate.style.color = 'red';
+        span.classList.add('message');
+      }
+      this.chatMessage.appendChild(span);
+      // this.chatMessage.scrollIntoView(false);
+      this.chatMessage.scrollTop = this.chatMessage.scrollHeight;
     }
-    this.chatMessage.appendChild(span);
   }
 
   sendMessage(message) {
