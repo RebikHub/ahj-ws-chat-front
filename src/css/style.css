@@ -50,13 +50,18 @@ body {
     border: 1px solid black;
 }
 
+@media (max-width: 600px) {
+    .chat {
+        width: 100%;
+    }
+}
+
 .chat {
     margin: auto;
     margin-top: 15px;
     width: 50%;
     display: flex;
     justify-content: center;
-
 }
 
 .nicknames-in-chat {
